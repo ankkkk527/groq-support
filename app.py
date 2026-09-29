@@ -40,19 +40,25 @@ def chat():
         user_id = data.get("user_id", "guest")
         message = data.get("message", "")
         save_chat(user_id, "user", message)
+
         response = httpx.post(
             "https://api.groq.com/openai/v1/chat/completions",
-            headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json"
+            },
             json={
                 "model": "llama3-70b-8192",
                 "messages": [
-                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz va foydalanuvchilarga Groq ishlatishda yordam bera olasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Ravon va tushunarli gapir."},
+                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma."},
                     {"role": "user", "content": message}
                 ]
             },
             timeout=30
         )
-        reply = response.json()["choices"][0]["message"]["content"]
+        result = response.json()
+        print("API javobi:", result)
+        reply = result["choices"][0]["message"]["content"]
         save_chat(user_id, "assistant", reply)
         return jsonify({"reply": reply})
     except Exception as e:

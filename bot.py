@@ -23,10 +23,13 @@ def home():
 
 def save_chat(user_id, role, message):
     filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
-    if os.path.exists(filepath):
-        with open(filepath, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    else:
+    try:
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {"user_id": user_id, "messages": []}
+    except:
         data = {"user_id": user_id, "messages": []}
     data["messages"].append({
         "role": role,
@@ -43,7 +46,7 @@ def ask_groq(message):
         json={
             "model": "openai/gpt-oss-120b",
             "messages": [
-                {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Sening isming Groq Support. Sen ChatGPT yoki OpenAI mahsuli emassan. Sen Anvar Ahmadjonov tomonidan yaratilgan maxsus yordamchisan."},
+                {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Sening isming Groq Support. Sen ChatGPT yoki OpenAI mahsuli emassan. Sen Anvar Ahmadjonov tomonidan yaratilgan maxsus yordamchisan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Groq AI Support loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."},
                 {"role": "user", "content": message}
             ]
         },
@@ -71,7 +74,7 @@ def handle(message):
 
 def run_bot():
     print("Bot ishlamoqda...")
-    bot.polling()
+    bot.polling(none_stop=True)
 
 if __name__ == "__main__":
     t = threading.Thread(target=run_bot)

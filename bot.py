@@ -2,6 +2,8 @@
 import httpx
 import os
 import json
+import threading
+from flask import Flask
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -9,10 +11,15 @@ load_dotenv('C:\\Users\\ahmad\\.env')
 
 BOT_TOKEN = "8899331556:AAEeBxp0RZyZ_kiBxOIvqWe20f54qcBRXvc"
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-CHATS_DIR = "C:\\Users\\ahmad\\chats"
+CHATS_DIR = "chats"
 os.makedirs(CHATS_DIR, exist_ok=True)
 
 bot = telebot.TeleBot(BOT_TOKEN)
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Bot ishlayapti!"
 
 def save_chat(user_id, role, message):
     filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
@@ -42,11 +49,12 @@ def ask_groq(message):
         },
         timeout=30
     )
-    return response.json()["choices"][0]["message"]["content"]
+    result = response.json()
+    return result["choices"][0]["message"]["content"]
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    bot.reply_to(message, "Salom! Men Anvar Ahmadjonov tomonidan yaratilgan yordamchiman. Har qanday savol bering! 😊")
+    bot.reply_to(message, "Salom! Men Anvar Ahmadjonov tomonidan yaratilgan yordamchiman. Har qanday savol bering!")
 
 @bot.message_handler(func=lambda m: True)
 def handle(message):
@@ -54,9 +62,20 @@ def handle(message):
     text = message.text
     save_chat(user_id, "user", text)
     bot.send_chat_action(message.chat.id, "typing")
-    reply = ask_groq(text)
+    try:
+        reply = ask_groq(text)
+    except Exception as e:
+        reply = f"Xato: {str(e)}"
     save_chat(user_id, "assistant", reply)
     bot.reply_to(message, reply)
 
-print("Bot ishlamoqda...")
-bot.polling()
+def run_bot():
+    print("Bot ishlamoqda...")
+    bot.polling()
+
+if __name__ == "__main__":
+    t = threading.Thread(target=run_bot)
+    t.daemon = True
+    t.start()
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)

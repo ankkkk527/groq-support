@@ -48,7 +48,7 @@ def chat():
                 "Content-Type": "application/json"
             },
             json={
-                "model": "llama3-70b-8192",
+                "model": "llama-3.1-70b-versatile",
                 "messages": [
                     {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma."},
                     {"role": "user", "content": message}

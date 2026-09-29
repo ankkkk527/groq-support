@@ -46,7 +46,7 @@ def chat():
             json={
                 "model": "qwen/qwen3.8-27b",
                 "messages": [
-                    {"role": "system", "content": "Siz Groq AI uchun support yordamchisiz. Foydalanuvchilarga Groq ishlatishda yordam bering. O'zbek tilida javob bering."},
+                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz va foydalanuvchilarga Groq ishlatishda yordam bera olasiz. O'zbek tilida javob bering."},
                     {"role": "user", "content": message}
                 ]
             },

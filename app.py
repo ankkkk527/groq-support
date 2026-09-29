@@ -44,9 +44,9 @@ def chat():
             "https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
             json={
-                "model": "qwen/qwen3.8-27b",
+                "model": "llama-3.3-70b-versatile",
                 "messages": [
-                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz va foydalanuvchilarga Groq ishlatishda yordam bera olasiz. O'zbek tilida javob bering."},
+                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz va foydalanuvchilarga Groq ishlatishda yordam bera olasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Ravon va tushunarli gapir."},
                     {"role": "user", "content": message}
                 ]
             },

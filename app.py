@@ -50,7 +50,7 @@ def chat():
             json={
                 "model": "openai/gpt-oss-120b",
                 "messages": [
-                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma."},
+                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov."},
                     {"role": "user", "content": message}
                 ]
             },

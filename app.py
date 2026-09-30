@@ -14,12 +14,32 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 CHATS_DIR = os.path.join(basedir, "chats")
 os.makedirs(CHATS_DIR, exist_ok=True)
 
+SYSTEM_PROMPT = "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Sening isming Groq Support. Sen ChatGPT yoki OpenAI mahsuli emassan. Sen Anvar Ahmadjonov tomonidan yaratilgan maxsus yordamchisan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Groq AI Support loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."
+
+def load_history(user_id):
+    filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
+    try:
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                messages = []
+                for m in data.get("messages", [])[-10:]:
+                    if m["role"] in ["user", "assistant"]:
+                        messages.append({"role": m["role"], "content": m["content"]})
+                return messages
+    except:
+        pass
+    return []
+
 def save_chat(user_id, role, message):
     filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
-    if os.path.exists(filepath):
-        with open(filepath, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    else:
+    try:
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = {"user_id": user_id, "messages": []}
+    except:
         data = {"user_id": user_id, "messages": []}
     data["messages"].append({
         "role": role,
@@ -41,6 +61,8 @@ def chat():
         message = data.get("message", "")
         save_chat(user_id, "user", message)
 
+        history = load_history(user_id)
+
         response = httpx.post(
             "https://api.groq.com/openai/v1/chat/completions",
             headers={
@@ -49,10 +71,7 @@ def chat():
             },
             json={
                 "model": "openai/gpt-oss-120b",
-                "messages": [
-                    {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz - kundalik hayot, fan, texnologiya va boshqalar. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov."},
-                    {"role": "user", "content": message}
-                ]
+                "messages": [{"role": "system", "content": SYSTEM_PROMPT}] + history
             },
             timeout=30
         )

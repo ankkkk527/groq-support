@@ -31,6 +31,21 @@ def keep_alive():
             pass
         time.sleep(840)
 
+def load_history(user_id):
+    filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
+    try:
+        if os.path.exists(filepath):
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                messages = []
+                for m in data.get("messages", [])[-10:]:
+                    if m["role"] in ["user", "assistant"]:
+                        messages.append({"role": m["role"], "content": m["content"]})
+                return messages
+    except:
+        pass
+    return []
+
 def save_chat(user_id, role, message):
     filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
     try:
@@ -49,16 +64,17 @@ def save_chat(user_id, role, message):
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-def ask_groq(message):
+def ask_groq(user_id, message):
+    history = load_history(user_id)
+    history.append({"role": "user", "content": message})
     response = httpx.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
         json={
             "model": "openai/gpt-oss-120b",
             "messages": [
-                {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Sening isming Groq Support. Sen ChatGPT yoki OpenAI mahsuli emassan. Sen Anvar Ahmadjonov tomonidan yaratilgan maxsus yordamchisan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Groq AI Support loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."},
-                {"role": "user", "content": message}
-            ]
+                {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Sening isming Groq Support. Sen ChatGPT yoki OpenAI mahsuli emassan. Sen Anvar Ahmadjonov tomonidan yaratilgan maxsus yordamchisan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Groq AI Support loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."}
+            ] + history
         },
         timeout=30
     )
@@ -76,7 +92,7 @@ def handle(message):
     save_chat(user_id, "user", text)
     bot.send_chat_action(message.chat.id, "typing")
     try:
-        reply = ask_groq(text)
+        reply = ask_groq(user_id, text)
     except Exception as e:
         reply = f"Xato: {str(e)}"
     save_chat(user_id, "assistant", reply)

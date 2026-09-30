@@ -3,6 +3,7 @@ import httpx
 import os
 import json
 import threading
+import time
 from flask import Flask
 from datetime import datetime
 from dotenv import load_dotenv
@@ -20,6 +21,15 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     return "Bot ishlayapti!"
+
+def keep_alive():
+    while True:
+        try:
+            url = os.environ.get("RENDER_EXTERNAL_URL", "http://localhost:5001")
+            httpx.get(url, timeout=10)
+        except:
+            pass
+        time.sleep(840)
 
 def save_chat(user_id, role, message):
     filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
@@ -57,7 +67,7 @@ def ask_groq(message):
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    bot.reply_to(message, 'Salom! Men Groq Support yordamchisiman. Anvar Ahmadjonov tomonidan yaratilganman. Har qanday savol bering! 😊')
+    bot.reply_to(message, "Salom! Men Groq Support yordamchisiman. Anvar Ahmadjonov tomonidan yaratilganman. Har qanday savol bering! 😊")
 
 @bot.message_handler(func=lambda m: True)
 def handle(message):
@@ -80,5 +90,8 @@ if __name__ == "__main__":
     t = threading.Thread(target=run_bot)
     t.daemon = True
     t.start()
+    k = threading.Thread(target=keep_alive)
+    k.daemon = True
+    k.start()
     port = int(os.environ.get("PORT", 5001))
     app.run(host="0.0.0.0", port=port)

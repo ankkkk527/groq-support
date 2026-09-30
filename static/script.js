@@ -54,8 +54,8 @@ async function sendMessage() {
     }
 }
 
-document.getElementById('userInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') sendMessage();
+document.getElementById('userInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' \&\& !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
 
 window.onload = function() {

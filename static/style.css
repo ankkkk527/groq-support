@@ -88,7 +88,7 @@ body {
     background: #2d2d2d;
 }
 
-.chat-input input {
+.chat-input textarea {
     flex: 1;
     padding: 12px 16px;
     border: 1px solid #555;
@@ -99,11 +99,11 @@ body {
     color: #ffffff;
 }
 
-.chat-input input::placeholder {
+.chat-input textarea::placeholder {
     color: #888;
 }
 
-.chat-input input:focus {
+.chat-input textarea:focus {
     border-color: #888;
 }
 

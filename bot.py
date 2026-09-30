@@ -57,7 +57,7 @@ def ask_groq(message):
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    bot.reply_to(message, "Salom! Men Anvar Ahmadjonov tomonidan yaratilgan yordamchiman. Har qanday savol bering!")
+    bot.reply_to(message, 'Salom! Men Groq Support yordamchisiman. Anvar Ahmadjonov tomonidan yaratilganman. Har qanday savol bering! 😊')
 
 @bot.message_handler(func=lambda m: True)
 def handle(message):

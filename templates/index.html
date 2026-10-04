@@ -5,22 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anvar AI</title>
     <link rel="manifest" href="/static/manifest.json">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#0a1628">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Anvar AI">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>🤖 Anvar AI</h2>
-            <p>Har qanday savolingiz bo'lsa so'rang!</p>
+    <div class="app">
+        <div class="sidebar">
+            <button class="new-chat-btn" onclick="newChat()">+ Yangi suhbat</button>
+            <div class="chat-list" id="chatList"></div>
         </div>
-        <div class="chat-messages" id="messages"></div>
-        <div class="chat-input">
-            <textarea id="userInput" placeholder="Savolingizni yozing..." rows="1"></textarea>
-            <button onclick="sendMessage()">Yuborish</button>
+        <div class="chat-container">
+            <div class="chat-header">
+                <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+                <h2>🤖 Anvar AI</h2>
+                <span></span>
+            </div>
+            <div class="chat-messages" id="messages"></div>
+            <div class="chat-input">
+                <textarea id="userInput" placeholder="Savolingizni yozing..." rows="1"></textarea>
+                <button onclick="sendMessage()">Yuborish</button>
+            </div>
         </div>
     </div>
     <script src="/static/script.js"></script>

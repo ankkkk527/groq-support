@@ -10,7 +10,7 @@ function addMessage(role, text) {
     const messages = document.getElementById('messages');
     const div = document.createElement('div');
     div.className = 'message ' + role;
-    div.innerHTML = text + '<div class="time">' + getCurrentTime() + '</div>';
+    div.innerHTML = text.replace(/\n/g, '<br>') + '<div class="time">' + getCurrentTime() + '</div>';
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
 }
@@ -37,6 +37,7 @@ async function sendMessage() {
 
     addMessage('user', message);
     input.value = '';
+    input.style.height = 'auto';
     showTyping();
 
     try {
@@ -55,9 +56,17 @@ async function sendMessage() {
 }
 
 document.getElementById('userInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' \&\& !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+document.getElementById('userInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
 });
 
 window.onload = function() {
-    addMessage('assistant', 'Salom! Men Groq Support yordamchisiman. Groq haqida savollaringiz bormi? Yordam berishga tayyorman! 😊');
+    addMessage('assistant', 'Salom! Men Anvar AI yordamchisiman. Har qanday savol bering! 😊');
 };

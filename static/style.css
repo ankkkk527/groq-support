@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #1a1a1a;
+    background: #1a1a1a url('/static/bg.jpg') no-repeat center center fixed; background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -95,7 +95,7 @@ body {
     border-radius: 25px;
     outline: none;
     font-size: 14px;
-    background: #1a1a1a;
+    background: #1a1a1a url('/static/bg.jpg') no-repeat center center fixed; background-size: cover;
     color: #ffffff;
 }
 

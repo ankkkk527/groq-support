@@ -67,6 +67,8 @@ document.getElementById('userInput').addEventListener('input', function() {
     this.style.height = (this.scrollHeight) + 'px';
 });
 
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/static/service-worker.js'); }
+
 window.onload = function() {
     addMessage('assistant', 'Salom! Men Anvar AI yordamchisiman. Har qanday savol bering! 😊');
 };

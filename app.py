@@ -14,7 +14,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 CHATS_DIR = os.path.join(basedir, "chats")
 os.makedirs(CHATS_DIR, exist_ok=True)
 
-SYSTEM_PROMPT = "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Sening isming Anvar AI. Sen ChatGPT yoki OpenAI mahsuli emassan. Sen Anvar Ahmadjonov tomonidan yaratilgan maxsus yordamchisan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Groq AI Support loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."
+SYSTEM_PROMPT = "Sening isming Anvar AI. Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sen ChatGPT yoki OpenAI mahsuli emassan. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Anvar AI loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."
 
 def load_history(user_id):
     filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
@@ -60,15 +60,10 @@ def chat():
         user_id = data.get("user_id", "guest")
         message = data.get("message", "")
         save_chat(user_id, "user", message)
-
         history = load_history(user_id)
-
         response = httpx.post(
             "https://api.groq.com/openai/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {GROQ_API_KEY}",
-                "Content-Type": "application/json"
-            },
+            headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
             json={
                 "model": "openai/gpt-oss-120b",
                 "messages": [{"role": "system", "content": SYSTEM_PROMPT}] + history
@@ -76,7 +71,6 @@ def chat():
             timeout=30
         )
         result = response.json()
-        print("API javobi:", result)
         reply = result["choices"][0]["message"]["content"]
         save_chat(user_id, "assistant", reply)
         return jsonify({"reply": reply})

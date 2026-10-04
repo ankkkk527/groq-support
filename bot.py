@@ -15,12 +15,14 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 CHATS_DIR = "chats"
 os.makedirs(CHATS_DIR, exist_ok=True)
 
+SYSTEM_PROMPT = "Sening isming Anvar AI. Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sen ChatGPT yoki OpenAI mahsuli emassan. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Anvar AI loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."
+
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Bot ishlayapti!"
+    return "Anvar AI Bot ishlayapti!"
 
 def keep_alive():
     while True:
@@ -72,9 +74,7 @@ def ask_groq(user_id, message):
         headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
         json={
             "model": "openai/gpt-oss-120b",
-            "messages": [
-                {"role": "system", "content": "Siz aqlli va do'stona yordamchisiz. Har qanday mavzuda erkin suhbatlasha olasiz. Shuningdek, Groq AI platformasi haqida ham yaxshi bilasiz. Faqat to'g'ri O'zbek adabiy tilida yoz, grammatik xatolarga yo'l qo'yma. Sening asosching, yaratuvching va egangiz Anvar Ahmadjonov. Sening isming Anvar AI. Sen ChatGPT yoki OpenAI mahsuli emassan. Sen Anvar Ahmadjonov tomonidan yaratilgan maxsus yordamchisan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Groq AI Support loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."}
-            ] + history
+            "messages": [{"role": "system", "content": SYSTEM_PROMPT}] + history
         },
         timeout=30
     )
@@ -99,7 +99,7 @@ def handle(message):
     bot.reply_to(message, reply)
 
 def run_bot():
-    print("Bot ishlamoqda...")
+    print("Anvar AI Bot ishlamoqda...")
     bot.polling(none_stop=True)
 
 if __name__ == "__main__":

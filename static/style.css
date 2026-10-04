@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #1a1a1a url('/static/bg.jpg') no-repeat center center fixed; background-size: cover;
+    background: #0a1628;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,9 +16,9 @@ body {
 .chat-container {
     width: 100%;
     max-width: 700px;
-    background: #2d2d2d;
+    background: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -26,7 +26,7 @@ body {
 }
 
 .chat-header {
-    background: #111111;
+    background: #0a1628;
     color: white;
     padding: 20px;
     text-align: center;
@@ -49,7 +49,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background: #2d2d2d;
+    background: #ffffff;
 }
 
 .message {
@@ -61,15 +61,15 @@ body {
 }
 
 .message.user {
-    background: #444444;
+    background: #0a1628;
     color: #ffffff;
     align-self: flex-end;
     border-bottom-right-radius: 4px;
 }
 
 .message.assistant {
-    background: #3a3a3a;
-    color: #e0e0e0;
+    background: #f0f4f8;
+    color: #333;
     align-self: flex-start;
     border-bottom-left-radius: 4px;
 }
@@ -83,32 +83,35 @@ body {
 .chat-input {
     display: flex;
     padding: 16px;
-    border-top: 1px solid #444;
+    border-top: 1px solid #e0e0e0;
     gap: 10px;
-    background: #2d2d2d;
+    background: #ffffff;
 }
 
 .chat-input textarea {
     flex: 1;
     padding: 12px 16px;
-    border: 1px solid #555;
+    border: 1px solid #ddd;
     border-radius: 25px;
     outline: none;
     font-size: 14px;
-    background: #1a1a1a url('/static/bg.jpg') no-repeat center center fixed; background-size: cover;
-    color: #ffffff;
+    background: #f0f4f8;
+    color: #333;
+    resize: none;
+    max-height: 120px;
+    overflow-y: auto;
 }
 
 .chat-input textarea::placeholder {
-    color: #888;
+    color: #999;
 }
 
 .chat-input textarea:focus {
-    border-color: #888;
+    border-color: #0a1628;
 }
 
 .chat-input button {
-    background: #444444;
+    background: #0a1628;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -119,14 +122,14 @@ body {
 }
 
 .chat-input button:hover {
-    background: #555555;
+    background: #1a2d4a;
 }
 
 .typing {
     display: flex;
     gap: 4px;
     padding: 12px 16px;
-    background: #3a3a3a;
+    background: #f0f4f8;
     border-radius: 12px;
     align-self: flex-start;
     width: fit-content;
@@ -135,7 +138,7 @@ body {
 .typing span {
     width: 8px;
     height: 8px;
-    background: #888;
+    background: #999;
     border-radius: 50%;
     animation: bounce 1s infinite;
 }

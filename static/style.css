@@ -25,6 +25,14 @@ body {
     padding: 16px;
     gap: 8px;
     overflow-y: auto;
+    transition: all 0.3s;
+}
+
+.sidebar.hidden {
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
 .new-chat-btn {
@@ -36,6 +44,7 @@ body {
     cursor: pointer;
     font-size: 14px;
     text-align: left;
+    white-space: nowrap;
     transition: background 0.2s;
 }
 
@@ -88,11 +97,25 @@ body {
     padding: 16px 20px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .chat-header h2 {
     font-size: 20px;
+}
+
+.menu-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.menu-btn:hover {
+    background: #1a2d4a;
 }
 
 .chat-messages {

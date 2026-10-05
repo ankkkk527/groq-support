@@ -4,7 +4,7 @@ import os
 import json
 import httpx
 from datetime import datetime
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))

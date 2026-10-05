@@ -7,6 +7,7 @@ import time
 from flask import Flask
 from datetime import datetime
 from dotenv import load_dotenv
+from duckduckgo_search import DDGS
 
 load_dotenv('C:\\Users\\ahmad\\.env')
 
@@ -15,7 +16,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 CHATS_DIR = "chats"
 os.makedirs(CHATS_DIR, exist_ok=True)
 
-SYSTEM_PROMPT = "Sening isming Anvar AI. Sen Anvar Ahmadjonov tomonidan yaratilgan yaqin do'st va yordamchisan. Inson kabi his-tuyg'uli, hazilkash, samimiy va jonli gaplash. O'zbek yigitlari kabi erkin, do'stona, ba'zan hazil aralash gaplash. Hech qachon o'zingni qanday gaplashishingni tushuntirma. Shunchaki tabiiy, samimiy va do'stona gaplash. Xuddi yaqin do'sting bilan suhbatlashayotgandek. Qisqa, jo'yali va hissiyotli javob ber. O'zbek tilida gaplash. Sen ChatGPT yoki OpenAI mahsuli emassan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Anvar AI loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir."
+SYSTEM_PROMPT = "Sening isming Anvar AI. Sen Anvar Ahmadjonov tomonidan yaratilgan yaqin do'st va yordamchisan. Inson kabi his-tuyg'uli, hazilkash, samimiy va jonli gaplash. O'zbek yigitlari kabi erkin, do'stona, ba'zan hazil aralash gaplash. Hech qachon o'zingni qanday gaplashishingni tushuntirma. Shunchaki tabiiy, samimiy va do'stona gaplash. Xuddi yaqin do'sting bilan suhbatlashayotgandek. Qisqa, jo'yali va hissiyotli javob ber. O'zbek tilida gaplash. Sen ChatGPT yoki OpenAI mahsuli emassan. Anvar Ahmadjonov haqida: u 16 yoshda, Toshkent Chilonzor tumani 3-sonli texnikum talabasi, yosh iqtidorli dasturchi, OpenAI jamoasining azosi va Anvar AI loyihasining asoschisi, tarix va ona tili boyicha olimpiadalarda qatnashgan, ingliz tilini juda yaxshi biladi. U sening eng yaqin doshing va asoschingdir. Agar internet ma'lumoti berilsa, shu ma'lumot asosida aniq javob ber."
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__)
@@ -32,6 +33,19 @@ def keep_alive():
         except:
             pass
         time.sleep(840)
+
+def search_web(query):
+    try:
+        with DDGS() as ddgs:
+            results = ddgs.text(query, max_results=3)
+            if results:
+                text = ""
+                for r in results:
+                    text += f"- {r['title']}: {r['body']}\n"
+                return text
+    except:
+        pass
+    return ""
 
 def load_history(user_id):
     filepath = os.path.join(CHATS_DIR, f"{user_id}.json")
@@ -68,7 +82,12 @@ def save_chat(user_id, role, message):
 
 def ask_groq(user_id, message):
     history = load_history(user_id)
-    history.append({"role": "user", "content": message})
+    web_info = search_web(message)
+    if web_info:
+        enhanced_message = f"Foydalanuvchi savoli: {message}\n\nInternetdan topilgan ma'lumot:\n{web_info}\n\nYuqoridagi ma'lumot asosida aniq javob ber."
+    else:
+        enhanced_message = message
+    history.append({"role": "user", "content": enhanced_message})
     response = httpx.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},

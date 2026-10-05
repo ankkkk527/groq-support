@@ -7,7 +7,7 @@ import time
 from flask import Flask
 from datetime import datetime
 from dotenv import load_dotenv
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 
 load_dotenv('C:\\Users\\ahmad\\.env')
 

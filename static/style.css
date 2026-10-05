@@ -226,3 +226,27 @@ body {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
 }
+.chat-item-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.chat-item-wrapper .chat-item {
+    flex: 1;
+}
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0.5;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+    background: #2a4a6a;
+}

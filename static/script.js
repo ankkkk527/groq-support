@@ -25,12 +25,40 @@ function renderChatList() {
     chatList.innerHTML = '';
     const keys = Object.keys(chats).reverse();
     keys.forEach(id => {
+        const item = document.createElement('div');
+        item.className = 'chat-item-wrapper';
+
         const btn = document.createElement('button');
         btn.className = 'chat-item' + (id === currentChatId ? ' active' : '');
         btn.textContent = chats[id].title || 'Yangi suhbat';
         btn.onclick = () => loadChat(id);
-        chatList.appendChild(btn);
+
+        const del = document.createElement('button');
+        del.className = 'delete-btn';
+        del.textContent = '🗑️';
+        del.onclick = (e) => {
+            e.stopPropagation();
+            deleteChat(id);
+        };
+
+        item.appendChild(btn);
+        item.appendChild(del);
+        chatList.appendChild(item);
     });
+}
+
+function deleteChat(id) {
+    delete chats[id];
+    saveChatsList();
+    if (currentChatId === id) {
+        const keys = Object.keys(chats);
+        if (keys.length > 0) {
+            loadChat(keys[keys.length - 1]);
+        } else {
+            newChat();
+        }
+    }
+    renderChatList();
 }
 
 function newChat() {

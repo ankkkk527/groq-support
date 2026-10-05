@@ -11,6 +11,7 @@ load_dotenv(os.path.join(basedir, '.env'))
 app = Flask(__name__)
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 CHATS_DIR = os.path.join(basedir, "chats")
 os.makedirs(CHATS_DIR, exist_ok=True)
 
@@ -18,20 +19,18 @@ SYSTEM_PROMPT = "Sening isming Anvar AI. Sen Anvar Ahmadjonov tomonidan yaratilg
 
 def search_web(query):
     try:
-        r = httpx.get(
-            "https://api.duckduckgo.com/",
-            params={"q": query, "format": "json", "no_html": "1", "skip_disambig": "1"},
+        r = httpx.post(
+            "https://api.tavily.com/search",
+            json={"api_key": TAVILY_API_KEY, "query": query, "max_results": 3},
             timeout=10
         )
         data = r.json()
-        result = data.get("AbstractText", "")
-        if not result:
-            topics = data.get("RelatedTopics", [])
-            for t in topics[:3]:
-                if "Text" in t:
-                    result += t["Text"] + "\n"
+        result = ""
+        for item in data.get("results", []):
+            result += item.get("content", "") + "\n"
         return result.strip()
-    except:
+    except Exception as e:
+        print(f"Search xato: {e}")
         return ""
 
 def load_history(user_id):

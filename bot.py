@@ -12,6 +12,7 @@ load_dotenv('C:\\Users\\ahmad\\.env')
 
 BOT_TOKEN = "8899331556:AAEeBxp0RZyZ_kiBxOIvqWe20f54qcBRXvc"
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 CHATS_DIR = "chats"
 os.makedirs(CHATS_DIR, exist_ok=True)
 
@@ -35,20 +36,18 @@ def keep_alive():
 
 def search_web(query):
     try:
-        r = httpx.get(
-            "https://api.duckduckgo.com/",
-            params={"q": query, "format": "json", "no_html": "1", "skip_disambig": "1"},
+        r = httpx.post(
+            "https://api.tavily.com/search",
+            json={"api_key": TAVILY_API_KEY, "query": query, "max_results": 3},
             timeout=10
         )
         data = r.json()
-        result = data.get("AbstractText", "")
-        if not result:
-            topics = data.get("RelatedTopics", [])
-            for t in topics[:3]:
-                if "Text" in t:
-                    result += t["Text"] + "\n"
+        result = ""
+        for item in data.get("results", []):
+            result += item.get("content", "") + "\n"
         return result.strip()
-    except:
+    except Exception as e:
+        print(f"Search xato: {e}")
         return ""
 
 def load_history(user_id):

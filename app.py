@@ -79,7 +79,9 @@ def chat():
         save_chat(user_id, "user", message)
         history = load_history(user_id)
 
-        web_info = search_web(message)
+        keywords = ['kim', 'nima', 'qachon', 'qayer', 'necha', 'narx', 'yangilik', 'hozir', 'bugun', 'yil', 'vafot', 'tug', 'born', 'died', 'price', 'news', 'when', 'where', 'what', 'who']
+        do_search = any(kw in message.lower() for kw in keywords)
+        web_info = search_web(message) if do_search else ''
         if web_info:
             enhanced_message = f"Foydalanuvchi savoli: {message}\n\nInternetdan topilgan ma'lumot:\n{web_info}\n\nYuqoridagi ma'lumot asosida aniq javob ber."
         else:
